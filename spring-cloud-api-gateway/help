@@ -1,0 +1,15 @@
+using spring.cloud.gateway.discovery.locator.enabled=true => routing base on services's name in eureka server
+    http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/100
+    http://localhost:8765/currency-conversion/currency-conversion/from/USD/to/INR/quantity/100
+
+    http://localhost:8765/currency-exchange/currency-exchange/from/USD/to/INR
+
+
+using custom RouteLocator => routing base on uri
+
+    http://localhost:8765/get
+    http://localhost:8765/currency-conversion-feign/from/USD/to/INR/quantity/100
+    http://localhost:8765/currency-conversion-new/from/USD/to/INR/quantity/100
+    http://localhost:8765/currency-conversion/from/USD/to/INR/quantity/100
+
+    http://localhost:8765/currency-exchange/from/USD/to/INR
