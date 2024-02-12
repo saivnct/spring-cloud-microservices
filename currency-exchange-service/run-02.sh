@@ -1,0 +1,1 @@
+sh mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8001'

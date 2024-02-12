@@ -1,4 +1,13 @@
-1. Circuit Breaker
+1. h2 database
+    http://localhost:8000/h2-console
+    jdbc url: jdbc:h2:mem:testdb
+
+2. endpoints
+    http://localhost:8000/actuator
+    http://localhost:8000/currency-exchange/from/USD/to/INR
+
+
+3. Circuit Breaker
    https://resilience4j.readme.io/docs/getting-started-3
 
     test retry:

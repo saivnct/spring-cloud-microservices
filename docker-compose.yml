@@ -1,0 +1,69 @@
+version: "3.7"
+
+services:
+  zipkin-server:
+    container_name: zipkin-container
+    image: openzipkin/zipkin:3
+    mem_limit: 300m
+    ports:
+      - 9411:9411
+    networks:
+      - giangbb-springcloud-network
+    restart: always #Restart if there is a problem starting up
+
+  naming-server:
+    image: giangtpu/spc-spring-cloud-naming-server:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8761:8761"
+    networks:
+      - giangbb-springcloud-network
+
+  api-gateway:
+    image: giangtpu/spc-spring-cloud-api-gateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - giangbb-springcloud-network
+    depends_on:
+      - naming-server
+      - zipkin-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+
+  currency-exchange:
+    image: giangtpu/spc-currency-exchange-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - giangbb-springcloud-network
+    depends_on:
+      - naming-server
+      - zipkin-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+
+  currency-conversion:
+    image: giangtpu/spc-currency-conversion-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - giangbb-springcloud-network
+    depends_on:
+      - naming-server
+      - zipkin-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+      CURRENCY-EXCHANGE-SERVICE.HOST: http://currency-exchange:8000
+
+  
+
+networks:
+  giangbb-springcloud-network:
+    name: giangbb-springcloud

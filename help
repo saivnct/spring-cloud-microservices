@@ -1,0 +1,8 @@
+1. enable devtool for intelij:
+    Preferences -> Build, Execution, Deployment -> Compiler -> Build project automatically
+    Preferences -> Advanced Settings -> Allow auto-make to....
+
+
+2. run with mvnm
+    ./mvnw spring-boot:run
+    ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8001'

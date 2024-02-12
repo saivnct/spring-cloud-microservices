@@ -2,6 +2,7 @@ package com.giangbb.microservices.currencyconversionservice.controller;
 
 import com.giangbb.microservices.currencyconversionservice.model.CurrencyConversion;
 import com.giangbb.microservices.currencyconversionservice.proxy.CurrencyExchangeProxy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +15,14 @@ import java.util.HashMap;
 @RestController
 public class CurrencyConversionController {
     private CurrencyExchangeProxy proxy;
+    private RestTemplate restTemplate;
 
-    public CurrencyConversionController(CurrencyExchangeProxy proxy) {
+    @Value("${currency-exchange-service.host}")
+    private String currencyExchangeServiceHost;
+
+    public CurrencyConversionController(CurrencyExchangeProxy proxy, RestTemplate restTemplate) {
         this.proxy = proxy;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
@@ -30,9 +36,9 @@ public class CurrencyConversionController {
         uriVariables.put("from",from);
         uriVariables.put("to",to);
 
-        ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate().getForEntity
-                ("http://localhost:8000/currency-exchange/from/{from}/to/{to}",
-                        CurrencyConversion.class, uriVariables);
+        String url = currencyExchangeServiceHost + "/currency-exchange/from/{from}/to/{to}";
+
+        ResponseEntity<CurrencyConversion> responseEntity = this.restTemplate.getForEntity(url, CurrencyConversion.class, uriVariables);
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
 
