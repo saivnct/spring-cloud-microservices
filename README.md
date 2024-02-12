@@ -3,6 +3,7 @@
 ## Environment
 * Spring Boot 3
 * JDK 17
+* Docker
 
 ## Servers
 * Config Server with spring-cloud-config-server
